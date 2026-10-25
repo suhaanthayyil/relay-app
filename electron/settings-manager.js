@@ -68,7 +68,7 @@ const DEFAULTS = {
     automationAdvancedControlUnlocked: false,
     automationRequireHighRiskConfirmation: true,
     automationVisionFallback: true,
-    automationModel: 'gpt-5.6-luna',
+    automationModel: 'gpt-6-luna',
 
     // Advanced
     debugLogging: false,

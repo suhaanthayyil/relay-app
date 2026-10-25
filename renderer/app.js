@@ -2339,17 +2339,19 @@ async function runContextualWakeFallback(rawPrompt, source = 'unknown', routingM
     statusTextEl.innerText = 'Analyzing context...';
 
     try {
-        const cameraFrame = await captureQuickCameraSnapshotDataUrl();
+        // Only open the camera when the question is about something in front of it.
+        const wantsCamera = /(what am i holding|holding|hold|fingers|finger|hand|object|showing you|this item|camera|in front of me)/i.test(prompt);
+        const cameraFrame = wantsCamera ? await captureQuickCameraSnapshotDataUrl() : null;
         const cameraBytes = Number(cameraFrame?.bytes || 0);
         window.electronAPI?.log?.(
-            `[ContextAssist] step=3 payload_prepare include_screen=true include_camera=true ` +
+            `[ContextAssist] step=3 payload_prepare include_screen=true include_camera=${wantsCamera} ` +
             `camera_source=${cameraFrame?.source || 'none'} camera_bytes=${cameraBytes} ` +
             `camera_luma=${Number(cameraFrame?.avgLuma || 0).toFixed(1)}`
         );
         const result = await window.electronAPI.contextAssist({
             prompt,
             includeScreen: true,
-            includeCamera: true,
+            includeCamera: wantsCamera,
             cameraImageDataUrl: String(cameraFrame?.dataUrl || ''),
             cameraMeta: {
                 source: cameraFrame?.source || 'none',
@@ -3593,10 +3595,10 @@ window.__relayCommandRouterReady = true;
             window.electronAPI?.setSettings?.('automationVisionFallback', true);
         }
         const normalizedAutomationModel = String(appSettings.automationModel || '').trim().toLowerCase();
-        // gpt-4.1-nano was retired by OpenAI on 2026-10-23.
-        if (!normalizedAutomationModel || ['gpt-4o-mini', 'gpt-4.1-nano'].includes(normalizedAutomationModel)) {
-            appSettings.automationModel = 'gpt-5.6-luna';
-            window.electronAPI?.setSettings?.('automationModel', 'gpt-5.6-luna');
+        // gpt-4.1-nano was retired on 2026-10-23; GPT-6 Luna replaces the older small models.
+        if (!normalizedAutomationModel || ['gpt-4o-mini', 'gpt-4.1-nano', 'gpt-5.6-luna'].includes(normalizedAutomationModel)) {
+            appSettings.automationModel = 'gpt-6-luna';
+            window.electronAPI?.setSettings?.('automationModel', 'gpt-6-luna');
         }
         if (appSettings.accessibilityMode === 'combined') {
             appSettings.accessibilityMode = 'deaf';

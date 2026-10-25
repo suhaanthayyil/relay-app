@@ -24,7 +24,7 @@ export async function describeSurroundings(
 ): Promise<string> {
   const query = question.trim() || 'What is in front of me?';
   return chatCompletion({
-    model: 'gpt-4o-mini',
+    model: 'gpt-6-luna',
     maxTokens: 150,
     temperature: 0.2,
     system:
@@ -41,7 +41,7 @@ export async function describeSurroundings(
 
 export async function readTextInImage(base64Jpeg: string, languageName: string): Promise<string> {
   return chatCompletion({
-    model: 'gpt-4o-mini',
+    model: 'gpt-6-luna',
     maxTokens: 700,
     temperature: 0,
     timeoutMs: 40000,
@@ -60,7 +60,7 @@ export async function readTextInImage(base64Jpeg: string, languageName: string):
 export async function catchUpSummary(lines: string[], languageName: string, keywords: string[]): Promise<string> {
   const names = keywords.length ? keywords.join(', ') : 'the user';
   return chatCompletion({
-    model: 'gpt-5.6-luna',
+    model: 'gpt-6-luna',
     maxTokens: 350,
     temperature: 0.2,
     timeoutMs: 20000,
@@ -76,7 +76,7 @@ export async function catchUpSummary(lines: string[], languageName: string, keyw
 
 export async function translateCaption(text: string, targetLanguage: string): Promise<string> {
   return chatCompletion({
-    model: 'gpt-5.6-luna',
+    model: 'gpt-6-luna',
     maxTokens: 300,
     temperature: 0,
     timeoutMs: 15000,
@@ -88,7 +88,7 @@ export async function translateCaption(text: string, targetLanguage: string): Pr
 // Feel the Conversation: shrink a caption so it can be felt as Braille in a few seconds.
 export async function compressForTouch(text: string): Promise<string> {
   return chatCompletion({
-    model: 'gpt-5.6-luna',
+    model: 'gpt-6-luna',
     maxTokens: 40,
     temperature: 0,
     timeoutMs: 8000,
@@ -133,7 +133,7 @@ const STRIP_NAMES = ['LEFT', 'CENTER', 'RIGHT'] as const;
 // Find My Object: one low-detail request per check keeps each check fast.
 export async function locateObject(strips: string[], target: string, languageName: string): Promise<ObjectSighting> {
   const raw = await chatCompletion({
-    model: 'gpt-4o-mini',
+    model: 'gpt-6-luna',
     maxTokens: 80,
     temperature: 0,
     timeoutMs: 12000,

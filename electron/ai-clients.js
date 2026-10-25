@@ -16,10 +16,14 @@ let openAIClient = null;
 
 // OpenAI retires models on a schedule (developers.openai.com/api/docs/deprecations).
 // Stored settings or older code may still name a retired model, so map them here.
-const CHAT_TEXT_MODEL = 'gpt-5.6-luna';
+// GPT-6 Luna is OpenAI's newest small model: text and images, at a lower price
+// than gpt-4o-mini and gpt-5.6-luna, which it replaces.
+const CHAT_TEXT_MODEL = 'gpt-6-luna';
+const VISION_MODEL = 'gpt-6-luna';
 const SPEECH_MODEL = 'gpt-4o-mini-tts';
 const TRANSCRIBE_MODEL = 'gpt-transcribe';
 const LEGACY_MODELS = {
+    'gpt-4o-mini': VISION_MODEL, // shuts down 2027-01-14
     'gpt-4.1-nano': CHAT_TEXT_MODEL, // shut down 2026-10-23
     'gpt-4.1-nano-2025-04-14': CHAT_TEXT_MODEL,
     'tts-1': SPEECH_MODEL, // shut down 2027-01-06
@@ -31,11 +35,15 @@ function resolveModel(model) {
     return LEGACY_MODELS[name] || name;
 }
 
-// GPT-5 family models reject max_tokens and spend output budget on reasoning
+// GPT-5 and newer reject max_tokens and spend output budget on reasoning
 // unless told not to, so normalize every chat request in one place.
+function isReasoningFamily(model) {
+    return Number((/^gpt-(\d+)/.exec(String(model || '')) || [])[1]) >= 5;
+}
+
 function normalizeChatRequest(body = {}) {
     const request = { ...body, model: resolveModel(body.model) };
-    if (/^gpt-5/.test(request.model)) {
+    if (isReasoningFamily(request.model)) {
         if (request.max_tokens != null && request.max_completion_tokens == null) {
             request.max_completion_tokens = request.max_tokens;
         }
@@ -107,6 +115,7 @@ async function getDeepgramClient() {
 module.exports = {
     RELAY_API_BASE,
     CHAT_TEXT_MODEL,
+    VISION_MODEL,
     SPEECH_MODEL,
     TRANSCRIBE_MODEL,
     resolveModel,

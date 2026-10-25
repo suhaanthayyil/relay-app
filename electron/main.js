@@ -29,8 +29,8 @@ const {
 
 // ML sound classifier – loads model in background on startup
 let soundClassifier = null;
-const FAST_TEXT_MODEL = String(process.env.RELAY_FAST_TEXT_MODEL || 'gpt-5.6-luna').trim() || 'gpt-5.6-luna';
-const FAST_VISION_MODEL = String(process.env.RELAY_FAST_VISION_MODEL || 'gpt-4o-mini').trim() || 'gpt-4o-mini';
+const FAST_TEXT_MODEL = String(process.env.RELAY_FAST_TEXT_MODEL || 'gpt-6-luna').trim() || 'gpt-6-luna';
+const FAST_VISION_MODEL = String(process.env.RELAY_FAST_VISION_MODEL || 'gpt-6-luna').trim() || 'gpt-6-luna';
 const CONTEXT_CAPTURE_DIR_NAME = 'Relay Context Captures';
 const recentRecipients = [];
 let lastAutomationContext = {
@@ -969,7 +969,7 @@ async function resolveVisionFallbackTarget(targetPhrase, activeAppName = 'Unknow
     };
 
     const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: FAST_VISION_MODEL,
         temperature: 0,
         stream: false,
         max_tokens: 220,
@@ -1030,7 +1030,7 @@ async function resolveVisionClickScript(targetPhrase, activeAppName = 'Unknown A
     };
 
     const completion = await openai.chat.completions.create({
-        model: 'gpt-4o-mini',
+        model: FAST_VISION_MODEL,
         temperature: 0,
         stream: false,
         max_tokens: 700,
@@ -1826,7 +1826,7 @@ async function createDesktopAutomationPlan(payload = {}) {
     const modelCandidates = [...new Set([
         configuredModel,
         CHAT_TEXT_MODEL,
-        'gpt-4o-mini'
+        'gpt-5.6-luna'
     ])];
     const ttlMs = Number(settingsState.automationContextTtlMs || 45000);
     const activeApp = await getActiveAppNameSafe();
@@ -3901,7 +3901,7 @@ ipcMain.handle('generate-meeting-summary', async (event, data) => {
             : fullTranscript;
 
         const response = await openai.chat.completions.create({
-            model: 'gpt-4o-mini',
+            model: FAST_TEXT_MODEL,
             temperature: 0.1,
             stream: false,
             messages: [

@@ -9,8 +9,12 @@ const MAX_OUTPUT_TOKENS = 1200;
 const DEFAULT_OUTPUT_TOKENS = 600;
 const MAX_TTS_CHARS = 4096;
 
+// GPT-6 Luna: OpenAI's newest small model. It reads images and costs less
+// than the models it replaces ($0.10 in / $0.50 out per 1M tokens).
+const CHAT_MODEL = 'gpt-6-luna';
+
 const MODELS_BY_ROUTE = {
-  'chat/completions': new Set(['gpt-4o-mini', 'gpt-5.6-luna']),
+  'chat/completions': new Set([CHAT_MODEL, 'gpt-5.6-luna', 'gpt-4o-mini']),
   'audio/speech': new Set(['gpt-4o-mini-tts']),
   'audio/transcriptions': new Set(['gpt-transcribe'])
 };
@@ -18,12 +22,17 @@ const MODELS_BY_ROUTE = {
 // Installed apps keep sending the model names they shipped with. Map models
 // OpenAI has retired (or scheduled to retire) to their supported replacements.
 const LEGACY_MODELS = {
-  'gpt-4.1-nano': 'gpt-5.6-luna', // shut down 2026-10-23
+  'gpt-4o-mini': CHAT_MODEL, // shuts down 2027-01-14
+  'gpt-5.6-luna': CHAT_MODEL, // replaced by GPT-6 Luna
+  'gpt-4.1-nano': CHAT_MODEL, // shut down 2026-10-23
   'tts-1': 'gpt-4o-mini-tts', // shut down 2027-01-06
   'gpt-4o-mini-transcribe': 'gpt-transcribe' // shut down 2027-02-26
 };
 
 const resolveModel = (model) => LEGACY_MODELS[model] || model;
+
+// GPT-5 and newer take max_completion_tokens and reasoning settings.
+const isReasoningFamily = (model) => Number((/^gpt-(\d+)/.exec(String(model)) || [])[1]) >= 5;
 
 function upstreamHeaders(contentType) {
   const headers = { authorization: `Bearer ${process.env.OPENAI_API_KEY}` };
@@ -50,8 +59,8 @@ function clampTokens(body) {
   if (body.max_tokens == null && body.max_completion_tokens == null) {
     body.max_tokens = DEFAULT_OUTPUT_TOKENS;
   }
-  // GPT-5 family: max_tokens is rejected, and reasoning would eat the output budget.
-  if (/^gpt-5/.test(body.model)) {
+  // GPT-5 and newer: max_tokens is rejected, and reasoning would eat the output budget.
+  if (isReasoningFamily(body.model)) {
     if (body.max_completion_tokens == null) body.max_completion_tokens = body.max_tokens;
     delete body.max_tokens;
     if (body.reasoning_effort == null) body.reasoning_effort = 'none';
@@ -106,6 +115,8 @@ export async function POST(request) {
   } catch {
     return json(400, { error: { message: 'Expected JSON body' } });
   }
+  const requestedModel = String(body?.model || '');
+  const original = route === 'chat/completions' && body ? structuredClone(body) : null;
   if (body) body.model = resolveModel(body.model);
   if (!body || !allowedModels.has(body.model)) {
     return json(400, { error: { message: 'Model not allowed' } });
@@ -123,10 +134,23 @@ export async function POST(request) {
     body.input = body.input.slice(0, MAX_TTS_CHARS);
   }
 
-  const upstream = await fetch(`${OPENAI_BASE}/${route}`, {
+  const send = (payload) => fetch(`${OPENAI_BASE}/${route}`, {
     method: 'POST',
     headers: upstreamHeaders('application/json'),
-    body: JSON.stringify(body)
+    body: JSON.stringify(payload)
   });
+  let upstream = await send(body);
+
+  // If the upgraded model rejects a request an older app shaped for its own
+  // model, retry once with the model the app asked for, so nothing breaks.
+  if (upstream.status === 400 && original && requestedModel !== body.model && allowedModels.has(requestedModel)) {
+    await upstream.body?.cancel();
+    original.model = requestedModel;
+    clampTokens(original);
+    original.n = 1;
+    original.stream = false;
+    delete original.stream_options;
+    upstream = await send(original);
+  }
   return relay(upstream);
 }
