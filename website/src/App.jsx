@@ -22,7 +22,7 @@ const HERO_VIDEO =
 const MODES_VIDEO = 'https://stream.mux.com/9JXDljEVWYwWu01PUkAemafDugK89o01BR6zqJ3aS9u00A.m3u8';
 const REPO_URL = 'https://github.com/pythonstuff8/relay-app';
 const RELEASES_URL = `${REPO_URL}/releases/latest`;
-const RELEASE_VERSION = '1.1.2';
+const RELEASE_VERSION = '1.2.0';
 
 // Flip `live` to true (and fill in the App Store URL) once each store listing is approved.
 const MOBILE_STORES = [
