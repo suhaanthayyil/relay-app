@@ -19,11 +19,11 @@ Use the **Releases** page for the fastest demo setup:
 
 Direct links always point to the newest release:
 
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-mac-arm64.dmg`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-mac-x64.dmg`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-windows-x64-setup.exe`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-linux-x64.AppImage`
-- `https://github.com/pythonstuff8/relay-app/releases/latest/download/Relay-linux-x64.deb`
+- `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-mac-arm64.dmg`
+- `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-mac-x64.dmg`
+- `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-windows-x64-setup.exe`
+- `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-linux-x64.AppImage`
+- `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-linux-x64.deb`
 
 ## Unsigned Build Note
 
@@ -61,7 +61,7 @@ The phone app lives in `mobile/` (Expo). See `mobile/README.md`.
 ### Setup
 
 ```bash
-git clone https://github.com/pythonstuff8/relay-app.git
+git clone https://github.com/suhaanthayyil/relay-app.git
 cd relay-app
 npm install
 cp .env.example .env
