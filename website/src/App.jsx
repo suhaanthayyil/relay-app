@@ -20,7 +20,7 @@ import { Button } from '@/components/ui/button';
 const HERO_VIDEO =
   'https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260328_105406_16f4600d-7a92-4292-b96e-b19156c7830a.mp4';
 const MODES_VIDEO = 'https://stream.mux.com/9JXDljEVWYwWu01PUkAemafDugK89o01BR6zqJ3aS9u00A.m3u8';
-const REPO_URL = 'https://github.com/pythonstuff8/relay-app';
+const REPO_URL = 'https://github.com/suhaanthayyil/relay-app';
 const RELEASES_URL = `${REPO_URL}/releases/latest`;
 const RELEASE_VERSION = '1.2.0';
 

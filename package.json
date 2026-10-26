@@ -116,7 +116,7 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "pythonstuff8",
+      "owner": "suhaanthayyil",
       "repo": "relay-app"
     }
   },
