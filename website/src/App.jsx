@@ -24,14 +24,14 @@ const REPO_URL = 'https://github.com/suhaanthayyil/relay-app';
 const RELEASES_URL = `${REPO_URL}/releases/latest`;
 const RELEASE_VERSION = '1.2.0';
 
-// Flip `live` to true (and fill in the App Store URL) once each store listing is approved.
+// Flip `live` to true once a store listing is approved. The App Store listing went live on Oct 31, 2026.
 const MOBILE_STORES = [
   {
     store: 'App Store',
     caption: 'Download on the',
     icon: FaApple,
-    url: 'https://apps.apple.com/app/id6821441069',
-    live: false
+    url: 'https://apps.apple.com/us/app/relay-accessibility-assistant/id6821441069',
+    live: true
   },
   {
     store: 'Google Play',

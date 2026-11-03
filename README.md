@@ -7,6 +7,8 @@ plus a companion phone app for iOS and Android.
 
 Website: https://relay.suhaanthayyil.com
 
+iPhone app: [Relay on the App Store](https://apps.apple.com/us/app/relay-accessibility-assistant/id6821441069)
+
 ## For Judges
 
 Use the **Releases** page for the fastest demo setup:
@@ -25,11 +27,11 @@ Direct links always point to the newest release:
 - `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-linux-x64.AppImage`
 - `https://github.com/suhaanthayyil/relay-app/releases/latest/download/Relay-linux-x64.deb`
 
-## Unsigned Build Note
+## Install Notes
 
-macOS signing is planned for a later release.
+macOS builds are signed with a Developer ID and notarized by Apple, so they open normally.
 
-Right now, macOS builds are unsigned. You may need to open the app from **Privacy & Security** and click **Open Anyway**.
+Windows builds are not signed yet.
 
 Windows may show SmartScreen. Click **More info** then **Run anyway**.
 
@@ -45,6 +47,8 @@ Windows may show SmartScreen. Click **More info** then **Run anyway**.
 - Phone pairing by QR code: sound alerts on your phone, caption mirror, and Remote Mic
 
 ## Mobile App
+
+Get the iPhone app on the [App Store](https://apps.apple.com/us/app/relay-accessibility-assistant/id6821441069). The Google Play listing is coming soon.
 
 The phone app lives in `mobile/` (Expo). See `mobile/README.md`.
 

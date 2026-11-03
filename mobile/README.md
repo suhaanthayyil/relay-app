@@ -2,6 +2,8 @@
 
 Expo (SDK 54) app for iOS and Android. It works standalone and pairs with the Relay desktop app.
 
+On the App Store: https://apps.apple.com/us/app/relay-accessibility-assistant/id6821441069
+
 ## Features
 
 - Standalone: Blind Mode, Read Aloud, Live Captions (with translation and type-to-speak), Braille keyboard and haptic reader, Quick Phrases, Loud Sound Alert.
